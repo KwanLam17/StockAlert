@@ -1,13 +1,5 @@
-import express from 'express';
-import {PORT} from './config/constants';
+import server from './server';
 
-const app: express.Application = express();
-app.use(express.json());
+const app = new server();
 
-app.get('/', function(req, res) {
-  res.send('Hello World!');
-});
-
-app.listen(PORT, () => {
-  console.log(`App is listening on port ${PORT}`);
-});
+app.start();
