@@ -1,7 +1,7 @@
 import passport from 'passport';
 import {Strategy as localStrategy} from 'passport-local';
 import {Strategy as jwtStrategy, ExtractJwt as extractJWT} from 'passport-jwt';
-import {User} from '../models/User';
+import {createUser, findUser} from '../components/users/DALs';
 
 passport.use('signup', new localStrategy({
   usernameField: 'email',
@@ -11,7 +11,7 @@ passport.use('signup', new localStrategy({
   try {
     const {firstName, lastName} = req.body;
 
-    const user = await User.create({firstName, lastName, email, password});
+    const user = await createUser(firstName, lastName, email, password);
 
     return done(null, user);
   } catch (error) {
@@ -24,12 +24,14 @@ passport.use('login', new localStrategy({
   passwordField: 'password',
 }, async (email, password, done) => {
   try {
-    const user = await User.findOne({email});
+    const user = await findUser(email);
+
     if (!user) {
       return done(null, false, {message: 'User not found'});
     }
 
     const validate = await user.isValidPassword(password);
+
     if (!validate) {
       return done(null, false, {message: 'Incorrect password'});
     }

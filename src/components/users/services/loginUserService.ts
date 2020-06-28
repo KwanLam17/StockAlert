@@ -2,8 +2,8 @@ import {Request, Response, NextFunction} from 'express';
 import passport from 'passport';
 import jwt from 'jsonwebtoken';
 
-export class AuthController {
-  public async login(req: Request, res: Response, next: NextFunction) {
+export default class LoginUserService {
+  public async execute(req: Request, res: Response, next: NextFunction) {
     passport.authenticate('login', async (error, user, info) => {
       try {
         if(error || !user) {

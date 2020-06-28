@@ -3,7 +3,8 @@ import mongoose from 'mongoose';
 import compression from 'compression';
 import cors from 'cors';
 import {PORT, MONGO_URL} from './config/constants';
-import {UserRoutes} from './routes/userRoutes';
+import {UserRoutes} from './components/users';
+import {StockRoutes} from './components/stocks';
 
 class Server {
   public app: express.Application;
@@ -15,8 +16,13 @@ class Server {
     this.mongo();
   }
 
+  public start(): void {
+    this.app.listen(this.app.get('port'), () => {
+      console.log(`API is running at http://localhost:${this.app.get('port')}`)
+    })
+  }
 
-  public config(): void {
+  private config(): void {
     this.app.set('port', PORT);
     this.app.use(express.json());
     this.app.use(express.urlencoded({extended: false}));
@@ -24,14 +30,9 @@ class Server {
     this.app.use(cors());
   }
 
-  public routes(): void {
+  private routes(): void {
     this.app.use('/user', new UserRoutes().router);
-  }
-
-  public start(): void {
-    this.app.listen(this.app.get('port'), () => {
-      console.log(`API is running at http://localhost:${this.app.get('port')}`)
-    })
+    this.app.use('/stock', new StockRoutes().router);
   }
 
   private mongo() {

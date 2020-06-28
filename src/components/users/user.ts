@@ -36,12 +36,14 @@ UserSchema.pre<IUser>('save', async function(next) {
   next();
 })
 
-UserSchema.methods.isValidPassword = async (password: String) => {
-  // const user = this;
+UserSchema.methods.isValidPassword = async function(password: String) {
+  const user = this;
 
-  // const compare = await bcrypt.compare(password, user.password);
+  const compare = await bcrypt.compare(password, user.password);
 
-  return true;
+  return compare;
 }
 
-export const User: Model<IUser> = model<IUser>("User", UserSchema);
+const User: Model<IUser> = model<IUser>("user", UserSchema);
+
+export default User;

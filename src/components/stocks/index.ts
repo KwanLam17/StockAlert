@@ -1,0 +1,1 @@
+export {default as StockRoutes} from './stockRoutes';
